@@ -1,0 +1,38 @@
+keytool -genkey -v -keystore gardon_keystore.keystore -alias gardon -keyalg RSA -keysize 2048 -validity 10000
+
+...
+
+303032
+afshin
+programming
+gardon
+Rome
+lazio
+IT
+
+...
+
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+...
+
+ signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
+        }
+    }
+
+    ...
+      signingConfig signingConfigs.release
+
+
+
+      flutter build apk --release
